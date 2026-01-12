@@ -1,6 +1,8 @@
 mod game_params;
+mod player;
 
 use crate::game_params::screen_center;
+use crate::player::Player;
 use macroquad::miniquad::window::high_dpi;
 use macroquad::prelude::*;
 
@@ -26,52 +28,12 @@ async fn main() {
 
     texture.set_filter(FilterMode::Nearest);
 
-    let mut time: f32 = 0.0;
-
-    let mut pos: Vec2 = screen_center();
+    let mut player = Player::new().await;
 
     loop {
         clear_background(BLACK);
 
-        time += get_frame_time();
-
-        let data_size = vec2(64.0, 64.0);
-
-        let mut move_dir = vec2(0.0, 0.0);
-        if is_key_down(KeyCode::W) {
-            move_dir.y -= 1.0;
-        }
-        if is_key_down(KeyCode::S) {
-            move_dir.y += 1.0;
-        }
-        if is_key_down(KeyCode::A) {
-            move_dir.x -= 1.0;
-        }
-        if is_key_down(KeyCode::D) {
-            move_dir.x += 1.0;
-        }
-
-        let speed = 100.0;
-        pos += move_dir.normalize_or_zero() * speed * get_frame_time();
-
-        let draw_pos = pos - data_size * 0.5;
-
-        draw_texture_ex(
-            &texture,
-            draw_pos.x,
-            draw_pos.y,
-            WHITE,
-            DrawTextureParams {
-                source: Some(Rect::new(
-                    16.0 * animation_frame(time, 4, 250) as f32, // x
-                    0.0,                                         // y
-                    16.0,                                        // width
-                    16.0,                                        // height
-                )),
-                dest_size: Some(data_size),
-                ..Default::default()
-            },
-        );
+        player.update();
 
         next_frame().await;
     }
