@@ -1,24 +1,19 @@
 use crate::animation_frame;
+use crate::game_params::screen_center;
+use crate::game_resources::game_resources;
 use macroquad::color::WHITE;
 use macroquad::input::{is_key_down, KeyCode};
 use macroquad::math::{vec2, Rect, Vec2};
 use macroquad::prelude::{draw_texture_ex, get_frame_time, DrawTextureParams, Texture2D};
-use crate::game_params::screen_center;
 
 pub struct Player {
-    texture: Texture2D,
     time: f32,
     pos: Vec2,
 }
 
 impl Player {
-    pub async fn new() -> Player {
-        let texture: Texture2D = macroquad::prelude::load_texture("assets/slug_16x16.png")
-            .await
-            .unwrap();
-        texture.set_filter(macroquad::prelude::FilterMode::Nearest);
+    pub fn new() -> Player {
         Player {
-            texture,
             time: 0.0,
             pos: screen_center(),
         }
@@ -51,7 +46,7 @@ impl Player {
         let draw_pos = self.pos - data_size * 0.5;
 
         draw_texture_ex(
-            &self.texture,
+            &game_resources().textures.player,
             draw_pos.x,
             draw_pos.y,
             WHITE,

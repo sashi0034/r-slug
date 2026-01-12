@@ -1,9 +1,9 @@
 mod game_params;
+mod game_resources;
 mod player;
 
-use crate::game_params::screen_center;
+use crate::game_resources::init_game_resources;
 use crate::player::Player;
-use macroquad::miniquad::window::high_dpi;
 use macroquad::prelude::*;
 
 fn window_conf() -> Conf {
@@ -24,11 +24,9 @@ fn animation_frame(time: f32, frame_count: i32, duration_ms: i32) -> i32 {
 
 #[macroquad::main(window_conf)]
 async fn main() {
-    let texture: Texture2D = load_texture("assets/slug_16x16.png").await.unwrap();
+    init_game_resources().await;
 
-    texture.set_filter(FilterMode::Nearest);
-
-    let mut player = Player::new().await;
+    let mut player = Player::new();
 
     loop {
         clear_background(BLACK);
