@@ -1,3 +1,4 @@
+mod common_state;
 mod game_params;
 mod game_resources;
 mod player;
@@ -26,12 +27,16 @@ fn animation_frame(time: f32, frame_count: i32, duration_ms: i32) -> i32 {
 async fn main() {
     init_game_resources().await;
 
+    let mut common_state = common_state::CommonState::new();
+
     let mut player = Player::new();
 
     loop {
         clear_background(BLACK);
 
-        player.update();
+        common_state.time += get_frame_time();
+
+        player.update(&common_state);
 
         next_frame().await;
     }

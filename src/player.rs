@@ -1,27 +1,21 @@
 use crate::animation_frame;
+use crate::common_state::CommonState;
 use crate::game_params::screen_center;
 use crate::game_resources::game_resources;
-use macroquad::color::WHITE;
-use macroquad::input::{is_key_down, KeyCode};
-use macroquad::math::{vec2, Rect, Vec2};
-use macroquad::prelude::{draw_texture_ex, get_frame_time, DrawTextureParams, Texture2D};
+use macroquad::prelude::*;
 
 pub struct Player {
-    time: f32,
     pos: Vec2,
 }
 
 impl Player {
     pub fn new() -> Player {
         Player {
-            time: 0.0,
             pos: screen_center(),
         }
     }
 
-    pub fn update(&mut self) {
-        self.time += get_frame_time();
-
+    pub fn update(&mut self, common_state: &CommonState) {
         let data_size = vec2(64.0, 64.0);
 
         let mut move_dir = vec2(0.0, 0.0);
@@ -52,10 +46,10 @@ impl Player {
             WHITE,
             DrawTextureParams {
                 source: Some(Rect::new(
-                    16.0 * animation_frame(self.time, 4, 250) as f32, // x
-                    0.0,                                              // y
-                    16.0,                                             // width
-                    16.0,                                             // height
+                    16.0 * animation_frame(common_state.time, 4, 250) as f32, // x
+                    0.0,                                                      // y
+                    16.0,                                                     // width
+                    16.0,                                                     // height
                 )),
                 dest_size: Some(data_size),
                 ..Default::default()
