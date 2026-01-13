@@ -2,6 +2,7 @@ mod common_state;
 mod game_params;
 mod game_resources;
 mod player;
+mod types;
 
 use crate::game_resources::init_game_resources;
 use crate::player::Player;

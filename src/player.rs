@@ -2,16 +2,19 @@ use crate::animation_frame;
 use crate::common_state::CommonState;
 use crate::game_params::screen_center;
 use crate::game_resources::game_resources;
+use crate::types::Horizontal2;
 use macroquad::prelude::*;
 
 pub struct Player {
     pos: Vec2,
+    dir: Horizontal2,
 }
 
 impl Player {
     pub fn new() -> Player {
         Player {
             pos: screen_center(),
+            dir: Horizontal2::Left,
         }
     }
 
@@ -35,6 +38,14 @@ impl Player {
         let speed = 100.0;
         self.pos += move_dir.normalize_or_zero() * speed * get_frame_time();
 
+        self.dir = if move_dir.x > 0.0 {
+            Horizontal2::Right
+        } else if move_dir.x < 0.0 {
+            Horizontal2::Left
+        } else {
+            self.dir
+        };
+
         // -----------------------------------------------
 
         let draw_pos = self.pos - data_size * 0.5;
@@ -52,6 +63,7 @@ impl Player {
                     16.0,                                                     // height
                 )),
                 dest_size: Some(data_size),
+                flip_x: self.dir == Horizontal2::Right,
                 ..Default::default()
             },
         );
