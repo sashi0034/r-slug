@@ -19,8 +19,6 @@ impl Player {
     }
 
     pub fn update(&mut self, common_state: &CommonState) {
-        let data_size = vec2(64.0, 64.0);
-
         let mut move_dir = vec2(0.0, 0.0);
         if is_key_down(KeyCode::W) {
             move_dir.y -= 1.0;
@@ -48,7 +46,8 @@ impl Player {
 
         // -----------------------------------------------
 
-        let draw_pos = self.pos - data_size * 0.5;
+        let source_size = vec2(16.0, 16.0);
+        let draw_pos = self.pos - source_size * 0.5;
 
         draw_texture_ex(
             &game_resources().textures.player,
@@ -59,10 +58,10 @@ impl Player {
                 source: Some(Rect::new(
                     16.0 * animation_frame(common_state.time, 4, 250) as f32, // x
                     0.0,                                                      // y
-                    16.0,                                                     // width
-                    16.0,                                                     // height
+                    source_size.x,                                            // width
+                    source_size.y,                                            // height
                 )),
-                dest_size: Some(data_size),
+                dest_size: Some(source_size),
                 flip_x: self.dir == Horizontal2::Right,
                 ..Default::default()
             },

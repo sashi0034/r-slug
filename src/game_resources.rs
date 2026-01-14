@@ -4,6 +4,7 @@ use std::sync::{Mutex, OnceLock};
 #[derive(Debug)]
 pub struct GameTextures {
     pub player: Texture2D,
+    pub floor: Texture2D,
 }
 
 async fn textures() -> GameTextures {
@@ -12,7 +13,12 @@ async fn textures() -> GameTextures {
         .unwrap();
     player.set_filter(macroquad::prelude::FilterMode::Nearest);
 
-    GameTextures { player }
+    let floor: Texture2D = macroquad::prelude::load_texture("assets/floor_24x24.png")
+        .await
+        .unwrap();
+    floor.set_filter(macroquad::prelude::FilterMode::Nearest);
+
+    GameTextures { player, floor }
 }
 
 #[derive(Debug)]

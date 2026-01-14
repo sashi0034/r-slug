@@ -1,9 +1,12 @@
 mod common_state;
+mod field;
 mod game_params;
 mod game_resources;
 mod player;
 mod types;
 
+use crate::field::draw_field;
+use crate::game_params::{screen_size, SCREEN_SCALE};
 use crate::game_resources::init_game_resources;
 use crate::player::Player;
 use macroquad::prelude::*;
@@ -33,11 +36,21 @@ async fn main() {
     let mut player = Player::new();
 
     loop {
-        clear_background(BLACK);
+        clear_background(Color::new(0.1, 0.1, 0.1, 1.0));
 
         common_state.time += get_frame_time();
 
-        player.update(&common_state);
+        {
+            set_camera(&Camera2D {
+                zoom: SCREEN_SCALE * 2.0 / screen_size(),
+                target: screen_size() * 0.5,
+                ..Default::default()
+            });
+
+            draw_field(&common_state.field_data);
+
+            player.update(&common_state);
+        }
 
         next_frame().await;
     }
